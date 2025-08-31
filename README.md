@@ -68,6 +68,11 @@ VeriBack provides a white label SDK that SaaS companies can integrate to offer v
 - Comprehensive documentation completion
 - Production deployment planning
 
+### Product Design Docs
+[Design Doc](https://drive.google.com/file/d/1bX3nGp7Tv2p8NK9ngmZluvMWrp-bpwqo/view?usp=sharing)
+
+### Notion Page 
+[Click Here for the Notion Guide](https://ajar-parsley-c2e.notion.site/VeriBack-Verifiable-Backups-as-a-Service-589e209a61e843488d17d3890b82718d)
 ## Getting Started
 
 ### Prerequisites
