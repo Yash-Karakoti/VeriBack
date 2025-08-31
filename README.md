@@ -15,11 +15,11 @@ Modern SaaS applications require users to blindly trust that their data is being
 
 ## Our Solution
 
-VeriBack provides a white-label SDK that SaaS companies can integrate to offer verifiable backups:
+VeriBack provides a white label SDK that SaaS companies can integrate to offer verifiable backups:
 1. Automatically creates encrypted data snapshots
 2. Stores them on Filecoin Warm Storage with continuous integrity proofs
 3. Provides cryptographic verification of backup status through Proof of Data Possession
-4. Enables fast recovery through CDN-accelerated retrieval
+4. Enables fast recovery through CDN accelerated retrieval
 
 ## Technology Stack
 
@@ -38,9 +38,9 @@ VeriBack provides a white-label SDK that SaaS companies can integrate to offer v
 ## Key Features
 
 - **Cryptographic Proofs**: Leverage Filecoin's Proof of Data Possession to verify backup integrity
-- **End-to-End Encryption**: Data encrypted client-side before storage
+- **End-to-End Encryption**: Data encrypted client side before storage
 - **Automated Payments**: Seamless billing through Filecoin Pay contracts
-- **Fast Recovery**: CDN-accelerated retrieval via FilCDN
+- **Fast Recovery**: CDN accelerated retrieval via FilCDN
 - **Developer-Friendly**: Simple SDK with comprehensive documentation and examples
 
 ## Buildathon Roadmap
