@@ -7,6 +7,7 @@ import { Header } from './components/Header'
 import { BackupUpload } from './components/BackupUpload'
 import { VerificationPanel } from './components/VerificationPanel'
 
+
 function App() {
   const [backups, setBackups] = useState<BackupItem[]>([])
   const [isConnected, setIsConnected] = useState(false)
@@ -84,16 +85,13 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%)'}}>
         <div className="text-center">
-          <div className="relative mb-8">
-            <div className="absolute inset-0 bg-indigo-500/30 rounded-full blur-xl"></div>
-            <div className="relative bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full p-6 border border-indigo-400/30">
-              <Shield className="h-12 w-12 text-white animate-pulse" />
-            </div>
+          <div className="dark-icon-container">
+            <Shield className="h-12 w-12 text-white animate-pulse" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Initializing VeriBack</h2>
-          <p className="text-gray-200">Setting up secure backup infrastructure...</p>
+          <h2 className="text-2xl font-bold dark-text-primary mb-2">Initializing VeriBack</h2>
+          <p className="dark-text-secondary">Setting up secure backup infrastructure...</p>
           <div className="mt-6 flex justify-center">
             <div className="flex space-x-2">
               <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
@@ -107,25 +105,22 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800">
+    <div className="min-h-screen" style={{background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%)'}}>
       <Header isConnected={isConnected} />
       
       <main className="container mx-auto px-4 py-8">
         {!isConnected ? (
           <div className="text-center py-16">
-            <div className="relative mb-8">
-              <div className="absolute inset-0 bg-red-500/30 rounded-full blur-xl"></div>
-              <div className="relative bg-red-500/20 backdrop-blur-sm rounded-full p-6 border border-red-500/30">
-                <AlertCircle className="h-16 w-16 text-red-400" />
-              </div>
+            <div className="dark-icon-container">
+              <AlertCircle className="h-16 w-16 text-red-400" />
             </div>
-            <h2 className="text-3xl font-bold text-white mb-4">System Offline</h2>
-            <p className="text-gray-200 mb-8 max-w-md mx-auto">
+            <h2 className="text-3xl font-bold dark-text-primary mb-4">System Offline</h2>
+            <p className="dark-text-secondary mb-8 max-w-md mx-auto">
               Unable to establish secure connection. Please check your network and try again.
             </p>
             <button 
               onClick={initializeVeriBack}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="dark-button px-8 py-4 text-lg"
             >
               Retry Connection
             </button>

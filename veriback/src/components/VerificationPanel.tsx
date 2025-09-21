@@ -23,8 +23,8 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({ backups })
   return (
     <div className="space-y-6">
       {/* Verification Status */}
-      <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700/50 p-6 hover-lift">
-        <h3 className="text-xl font-bold text-white mb-6">Verification Status</h3>
+      <div className="dark-card p-6">
+        <h3 className="text-xl font-bold dark-text-primary mb-6">Verification Status</h3>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
@@ -57,8 +57,8 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({ backups })
 
       {/* Recent Verifications */}
       {verifiedBackups.length > 0 && (
-        <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700/50 p-6 hover-lift">
-          <h3 className="text-xl font-bold text-white mb-6">Recent Verifications</h3>
+        <div className="dark-card p-6">
+          <h3 className="text-xl font-bold dark-text-primary mb-6">Recent Verifications</h3>
           
           <div className="space-y-4">
             {verifiedBackups.slice(0, 3).map((backup) => (
@@ -66,8 +66,8 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({ backups })
                 <div className="flex items-center">
                   <Shield className="h-5 w-5 text-green-400 mr-3" />
                   <div>
-                    <p className="text-sm font-medium text-white">{backup.name}</p>
-                    <p className="text-xs text-gray-200">
+                    <p className="text-sm font-medium dark-text-primary">{backup.name}</p>
+                    <p className="text-xs dark-text-secondary">
                       Verified {backup.lastVerified ? formatDate(backup.lastVerified) : 'Recently'}
                     </p>
                   </div>
@@ -75,7 +75,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({ backups })
                 <div className="text-right">
                   <p className="text-xs text-green-400 font-medium">PDP Valid</p>
                   {backup.verification && (
-                    <p className="text-xs text-gray-200 font-mono">
+                    <p className="text-xs dark-text-muted font-mono">
                       {backup.verification.proofHash.slice(0, 8)}...
                     </p>
                   )}
@@ -87,40 +87,32 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({ backups })
       )}
 
       {/* How It Works */}
-      <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700/50 p-6 hover-lift">
-        <h3 className="text-xl font-bold text-white mb-6">How VeriBack Works</h3>
+      <div className="dark-card p-6">
+        <h3 className="text-xl font-bold dark-text-primary mb-6">How VeriBack Works</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-gray-800/60 rounded-xl border border-gray-600/30">
-            <div className="w-12 h-12 bg-indigo-500/20 border border-indigo-500/50 rounded-full flex items-center justify-center mx-auto mb-3">
-              <span className="text-lg font-bold text-indigo-300">1</span>
-            </div>
-            <p className="text-sm font-medium text-white mb-2">Client-Side Encryption</p>
-            <p className="text-xs text-gray-200">Your data is encrypted before leaving your device</p>
+          <div className="dark-workflow-card">
+            <div className="dark-workflow-number">1</div>
+            <p className="text-sm font-medium dark-text-primary mb-2">Client-Side Encryption</p>
+            <p className="text-xs dark-text-secondary">Your data is encrypted before leaving your device</p>
           </div>
           
-          <div className="text-center p-4 bg-gray-800/60 rounded-xl border border-gray-600/30">
-            <div className="w-12 h-12 bg-indigo-500/20 border border-indigo-500/50 rounded-full flex items-center justify-center mx-auto mb-3">
-              <span className="text-lg font-bold text-indigo-300">2</span>
-            </div>
-            <p className="text-sm font-medium text-white mb-2">Filecoin Warm Storage</p>
-            <p className="text-xs text-gray-200">Encrypted data stored with continuous PDP proofs</p>
+          <div className="dark-workflow-card">
+            <div className="dark-workflow-number">2</div>
+            <p className="text-sm font-medium dark-text-primary mb-2">Filecoin Warm Storage</p>
+            <p className="text-xs dark-text-secondary">Encrypted data stored with continuous PDP proofs</p>
           </div>
           
-          <div className="text-center p-4 bg-gray-800/60 rounded-xl border border-gray-600/30">
-            <div className="w-12 h-12 bg-indigo-500/20 border border-indigo-500/50 rounded-full flex items-center justify-center mx-auto mb-3">
-              <span className="text-lg font-bold text-indigo-300">3</span>
-            </div>
-            <p className="text-sm font-medium text-white mb-2">Cryptographic Verification</p>
-            <p className="text-xs text-gray-200">Proof of Data Possession ensures integrity</p>
+          <div className="dark-workflow-card">
+            <div className="dark-workflow-number">3</div>
+            <p className="text-sm font-medium dark-text-primary mb-2">Cryptographic Verification</p>
+            <p className="text-xs dark-text-secondary">Proof of Data Possession ensures integrity</p>
           </div>
           
-          <div className="text-center p-4 bg-gray-800/60 rounded-xl border border-gray-600/30">
-            <div className="w-12 h-12 bg-indigo-500/20 border border-indigo-500/50 rounded-full flex items-center justify-center mx-auto mb-3">
-              <span className="text-lg font-bold text-indigo-300">4</span>
-            </div>
-            <p className="text-sm font-medium text-white mb-2">Fast Recovery</p>
-            <p className="text-xs text-gray-200">FilCDN enables quick data retrieval</p>
+          <div className="dark-workflow-card">
+            <div className="dark-workflow-number">4</div>
+            <p className="text-sm font-medium dark-text-primary mb-2">Fast Recovery</p>
+            <p className="text-xs dark-text-secondary">FilCDN enables quick data retrieval</p>
           </div>
         </div>
       </div>
