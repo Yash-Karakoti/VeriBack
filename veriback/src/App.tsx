@@ -41,8 +41,11 @@ function App() {
     if (!veriBackService) return
 
     try {
+      console.log('Starting backup upload for file:', file.name)
       const backupItem = await veriBackService.createBackup(file)
+      console.log('Backup created successfully:', backupItem)
       setBackups(prev => [...prev, backupItem])
+      console.log('Backup added to state')
     } catch (error) {
       console.error('Failed to create backup:', error)
     }
@@ -51,17 +54,48 @@ function App() {
   const handleVerifyBackup = async (backupId: string) => {
     if (!veriBackService) return
 
+    console.log(`Starting verification for backup: ${backupId}`)
+
+    // Set status to verifying first
+    setBackups(prev => 
+      prev.map(backup => 
+        backup.id === backupId 
+          ? { ...backup, status: 'verifying' }
+          : backup
+      )
+    )
+
     try {
+      console.log('Calling veriBackService.verifyBackup...')
       const verification = await veriBackService.verifyBackup(backupId)
+      console.log('Verification result received:', verification)
+      
+      // Update with verification result and set status to verified
       setBackups(prev => 
         prev.map(backup => 
           backup.id === backupId 
-            ? { ...backup, verification, lastVerified: new Date() }
+            ? { 
+                ...backup, 
+                status: verification.isValid ? 'verified' : 'error',
+                verification, 
+                lastVerified: new Date() 
+              }
             : backup
         )
       )
+      
+      console.log('Backup status updated to verified')
     } catch (error) {
       console.error('Failed to verify backup:', error)
+      
+      // Set status to error on failure
+      setBackups(prev => 
+        prev.map(backup => 
+          backup.id === backupId 
+            ? { ...backup, status: 'error' }
+            : backup
+        )
+      )
     }
   }
 
@@ -81,6 +115,11 @@ function App() {
     } catch (error) {
       console.error('Failed to recover backup:', error)
     }
+  }
+
+  const handleDownloadBackup = async (backupId: string) => {
+    if (!veriBackService) return
+    return await veriBackService.downloadBackup(backupId)
   }
 
   if (loading) {
@@ -132,6 +171,7 @@ function App() {
                 backups={backups}
                 onVerifyBackup={handleVerifyBackup}
                 onRecoverBackup={handleRecoverBackup}
+                onDownloadBackup={handleDownloadBackup}
               />
             </div>
             

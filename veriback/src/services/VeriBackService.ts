@@ -71,16 +71,22 @@ export class VeriBackService {
     }
 
     try {
+      console.log(`Starting verification for backup: ${backupId}`)
+      
       // Get backup metadata
       const backup = this.getBackupMetadata(backupId)
       if (!backup) {
         throw new Error('Backup not found')
       }
 
+      console.log('Backup found:', backup)
+
       if (!backup.pieceCid) {
         throw new Error('Backup not properly stored')
       }
 
+      console.log('Starting PDP verification process...')
+      
       // Simulate verification process
       await new Promise(resolve => setTimeout(resolve, 1500))
 
@@ -106,6 +112,7 @@ export class VeriBackService {
         }
       }
 
+      console.log('Verification completed successfully:', result)
       return result
     } catch (error) {
       console.error('Failed to verify backup:', error)
@@ -139,6 +146,76 @@ export class VeriBackService {
       console.error('Failed to recover backup:', error)
       throw new Error('Failed to recover backup')
     }
+  }
+
+  async downloadBackup(backupId: string): Promise<{ data: ArrayBuffer; verification: VerificationResult; fileName: string }> {
+    if (!this.isInitialized) {
+      throw new Error('VeriBack service not initialized')
+    }
+
+    try {
+      // Get backup metadata
+      const backup = this.getBackupMetadata(backupId)
+      if (!backup || !backup.pieceCid) {
+        throw new Error('Backup not found or not properly stored')
+      }
+
+      // First verify the backup before download
+      console.log(`Verifying backup ${backupId} before download...`)
+      const verification = await this.verifyBackup(backupId)
+      
+      if (!verification.isValid) {
+        throw new Error('Backup verification failed - data may be corrupted')
+      }
+
+      // Simulate download process with progress
+      console.log(`Downloading backup ${backupId} from Filecoin network...`)
+      await new Promise(resolve => setTimeout(resolve, 2000))
+
+      // Simulate FilCDN download (in production, this would use Synapse SDK)
+      const mockEncryptedData = new ArrayBuffer(backup.size) // Use actual backup size
+      
+      // Decrypt the data
+      const decryptedData = await this.decryptData(mockEncryptedData)
+      
+      // Generate cryptographic hash of downloaded data for verification
+      const dataHash = await this.generateDataHash(decryptedData)
+      
+      // Verify the downloaded data matches the stored hash
+      const isDataValid = await this.verifyDataIntegrity(backupId, dataHash)
+      
+      if (!isDataValid) {
+        throw new Error('Downloaded data integrity check failed')
+      }
+
+      console.log(`Backup ${backupId} downloaded and verified successfully!`)
+      
+      return {
+        data: decryptedData,
+        verification: verification,
+        fileName: backup.name
+      }
+    } catch (error) {
+      console.error('Failed to download backup:', error)
+      throw new Error('Failed to download backup')
+    }
+  }
+
+  private async generateDataHash(data: ArrayBuffer): Promise<string> {
+    // Simulate cryptographic hash generation
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  }
+
+  private async verifyDataIntegrity(backupId: string, dataHash: string): Promise<boolean> {
+    // Simulate data integrity verification
+    // In production, this would compare with stored hash from Filecoin
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
+    // For demo purposes, always return true
+    // In production, this would verify against the stored hash
+    return true
   }
 
   async getBackups(): Promise<BackupItem[]> {

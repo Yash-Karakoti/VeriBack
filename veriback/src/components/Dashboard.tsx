@@ -1,14 +1,84 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Shield, Database, Clock, CheckCircle, AlertCircle, Download, Eye } from 'lucide-react'
-import type { BackupItem } from '../types/BackupItem'
+import type { BackupItem, VerificationResult } from '../types/BackupItem'
+import { DownloadModal } from './DownloadModal'
 
 interface DashboardProps {
   backups: BackupItem[]
   onVerifyBackup: (backupId: string) => void
   onRecoverBackup: (backupId: string) => void
+  onDownloadBackup: (backupId: string) => Promise<{ data: ArrayBuffer; verification: VerificationResult; fileName: string }>
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ backups, onVerifyBackup, onRecoverBackup }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ backups, onVerifyBackup, onRecoverBackup, onDownloadBackup }) => {
+  const [downloadModal, setDownloadModal] = useState<{
+    isOpen: boolean
+    fileName: string
+    verification: VerificationResult | null
+    downloadProgress: number
+    isDownloading: boolean
+    isComplete: boolean
+    error?: string
+  }>({
+    isOpen: false,
+    fileName: '',
+    verification: null,
+    downloadProgress: 0,
+    isDownloading: false,
+    isComplete: false
+  })
+
+  const handleDownload = async (backupId: string, fileName: string) => {
+    setDownloadModal({
+      isOpen: true,
+      fileName,
+      verification: null,
+      downloadProgress: 0,
+      isDownloading: true,
+      isComplete: false
+    })
+
+    try {
+      // Simulate download progress
+      const progressInterval = setInterval(() => {
+        setDownloadModal(prev => ({
+          ...prev,
+          downloadProgress: Math.min(prev.downloadProgress + 10, 90)
+        }))
+      }, 200)
+
+      const result = await onDownloadBackup(backupId)
+      
+      clearInterval(progressInterval)
+      
+      setDownloadModal(prev => ({
+        ...prev,
+        downloadProgress: 100,
+        isDownloading: false,
+        isComplete: true,
+        verification: result.verification
+      }))
+
+      // Trigger actual file download
+      const blob = new Blob([result.data])
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = result.fileName
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+
+    } catch (error) {
+      setDownloadModal(prev => ({
+        ...prev,
+        isDownloading: false,
+        isComplete: false,
+        error: error instanceof Error ? error.message : 'Download failed'
+      }))
+    }
+  }
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes'
     const k = 1024
@@ -146,33 +216,54 @@ export const Dashboard: React.FC<DashboardProps> = ({ backups, onVerifyBackup, o
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-3">
-                    {backup.status === 'stored' && (
-                      <button
-                        onClick={() => onVerifyBackup(backup.id)}
-                        className="dark-button text-sm"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        Verify
-                      </button>
-                    )}
-                    
-                    {backup.status === 'verified' && (
-                      <button
-                        onClick={() => onRecoverBackup(backup.id)}
-                        className="dark-button text-sm"
-                      >
-                        <Download className="h-4 w-4 mr-2" />
-                        Recover
-                      </button>
-                    )}
-                  </div>
+                      <div className="flex items-center space-x-3">
+                        {backup.status === 'stored' && (
+                          <button
+                            onClick={() => onVerifyBackup(backup.id)}
+                            className="dark-button text-sm"
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            Verify
+                          </button>
+                        )}
+                        
+                        {backup.status === 'verified' && (
+                          <>
+                            <button
+                              onClick={() => onRecoverBackup(backup.id)}
+                              className="dark-button text-sm"
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              View
+                            </button>
+                            <button
+                              onClick={() => handleDownload(backup.id, backup.name)}
+                              className="dark-button text-sm bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              Download
+                            </button>
+                          </>
+                        )}
+                      </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Download Modal */}
+      <DownloadModal
+        isOpen={downloadModal.isOpen}
+        onClose={() => setDownloadModal(prev => ({ ...prev, isOpen: false }))}
+        fileName={downloadModal.fileName}
+        verification={downloadModal.verification!}
+        downloadProgress={downloadModal.downloadProgress}
+        isDownloading={downloadModal.isDownloading}
+        isComplete={downloadModal.isComplete}
+        error={downloadModal.error}
+      />
     </div>
   )
 }
